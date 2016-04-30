@@ -1,7 +1,7 @@
 /**
  * Created by emilsharifullin on 30/04/16.
  */
-function Cloud () {
+function Cloud(position) {
     // Create an empty container that will hold the different parts of the cloud
     this.mesh = new THREE.Object3D();
 
@@ -10,16 +10,14 @@ function Cloud () {
     var geom = new THREE.BoxGeometry(20, 20, 20);
 
     // create a material; a simple white material will do the trick
-    var mat = new THREE.MeshBasicMaterial({
-        color: COLORS.LIGHT_PURPLE
-    });
+
 
     // duplicate the geometry a random number of times
     var nBlocs = 3 + Math.floor(Math.random() * 3);
     for (var i = 0; i < nBlocs; i++) {
 
         // create the mesh by cloning the geometry
-        var m = new THREE.Mesh(geom, mat);
+        var m = new THREE.Mesh(geom, this.mat);
 
         // set the position and the rotation of each cube randomly
         m.position.x = i * 15;
@@ -38,12 +36,13 @@ function Cloud () {
         this.mesh.add(m);
         // add the cube to the container we first created
     }
-}
-
-Cloud.prototype.addToScene = function(scene, position) {
     this.mesh.scale.set(.05, .05, .05);
     this.mesh.position.x = position.x;
     this.mesh.position.y = position.y;
     this.mesh.position.z = position.z;
-    scene.add(this.mesh);
-};
+}
+
+Cloud.prototype.mat = new THREE.MeshPhongMaterial({
+		color:COLORS.LIGHT_PURPLE,
+		shading:THREE.FlatShading
+	});

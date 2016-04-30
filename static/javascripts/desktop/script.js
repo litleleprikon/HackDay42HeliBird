@@ -12,8 +12,11 @@ function ready() {
             $('#target').animate({'left': data.x < 0 ? '-=' + Math.abs(data.x) * MOTION_MULTIPLIER : '+=' + data.x * MOTION_MULTIPLIER}, MOTION_SPEED);
         });
     });
-    createScene();
-
+    var renderer = createRenderer();
+    var scene = createScene(renderer);
+    var world = new World(scene);
+    var camera = createCamera(scene);
+    loop(scene, renderer, camera, world)
 }
 
 function createLights(scene) {
@@ -50,25 +53,29 @@ function createLights(scene) {
     scene.add(shadowLight);
 }
 
-function createScene() {
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+function createRenderer() {
     var renderer = new THREE.WebGLRenderer({alpha: true});
     renderer.setSize(window.innerWidth, window.innerHeight);
+    return renderer;
+}
+
+function createCamera(scene) {
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.x = 0;
+    camera.position.y = 10;
+    camera.position.z = -30;
+    camera.lookAt(scene.position);
+    return camera;
+}
+
+function createScene(renderer) {
+    var scene = new THREE.Scene();
     var axes = new THREE.AxisHelper(20);
     scene.fog = new THREE.Fog(COLORS.BLUE, 100, 950);
     scene.add(axes);
     createLights(scene);
-    camera.position.x = 50;
-    camera.position.y = 50;
-    camera.position.z = -50;
-    camera.lookAt(scene.position);
-    // var helicopter = new Helicopter();
-    // helicopter.addToScene(scene);
-    var world = new World(scene);
-    // new Cloud().addToScene(scene, {x: 0, y: 6, z: 0});
     $("#scene").append(renderer.domElement);
-    loop(scene, renderer, camera, world)
+    return scene;
 }
 
 function loop(scene, renderer, camera, world) {

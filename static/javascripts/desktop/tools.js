@@ -7,7 +7,7 @@ var COLORS = {
     BLUE: 0x3581b8,
     BROWN: 0xfcb07e,
     DARK_PURPLE: 0x4d5382,
-    LIGHT_PURPLE: 0xd5c9dd,
+    LIGHT_PURPLE: 0xf5e1f7,
     PURPLE: 0xdc98d9,
     BLACK: 0x111111
 };

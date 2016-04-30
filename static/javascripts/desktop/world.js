@@ -5,71 +5,61 @@
 function World(scene) {
     this.scene = scene;
     this.helicopter = new Helicopter();
-    this.skyParts = this.createClouds(scene);
+    this.skyParts = [this.createCloudsFrame(0), this.createCloudsFrame(1), this.createCloudsFrame(2), this.createCloudsFrame(3)];
     this.helicopter.addToScene(scene);
-    this.DISTANCE_TO_DELETE = 30;
-    this.newClouds = true;
+    this.DISTANCE_TO_DELETE = -60;
+    this.DISTANCE_TO_ALLOCATE = 70;
 }
 
-World.prototype.createClouds = function (scene) {
-    clouds = [];
-    for (var i = 0; i < random(40, 45); i++) {
-        var cloud = new Cloud();
-        clouds.push(cloud);
-        cloud.addToScene(scene, {
+World.prototype.createCloudsFrame = function (sequenceNum) {
+    var frame = new THREE.Object3D();
+    for (var i = 0; i < random(5, 10); i++) {
+        var cloud = new Cloud({
             x: random(-30, 30),
             y: random(-30, 30),
-            z: random(0, 70)
+            z: random(0, 20)
         });
+        frame.add(cloud.mesh);
     }
-    return clouds;
+    frame.position.z = 20 * sequenceNum;
+    this.scene.add(frame);
+    return frame;
 };
 
-World.prototype.step = function () {
-    this.helicopter.propeller.rotation.y -= 0.3;
-    this.moveClouds();
-    this.genereteNewClouds();
-};
+World.prototype.removeFirst = function () {
+    var first = this.skyParts.shift();
+    first.children.forEach(function (item) {
+        item.children.forEach(function (secItem) {
+            // console.log(secItem);
+            secItem.geometry.dispose();
+            secItem.material.dispose();
+        })
 
-World.prototype.genereteNewClouds = function () {
-    var self = this;
-    if (this.newClouds) {
-        for (var i = 0; i < random(5, 15); i++) {
-            var cloud = new Cloud();
-            this.skyParts.push(cloud);
-            cloud.addToScene(this.scene, {
-                x: random(-30, 30),
-                y: random(-30, 30),
-                z: random(70, 90)
-            });
-        }
-        this.newClouds = false;
-        setTimeout(function () {
-            self.newClouds = true;
-        }, 750)
-    }
+    });
+    this.scene.remove(first);
 };
 
 World.prototype.moveClouds = function () {
     var self = this;
-    for (var i = 0, len = this.skyParts.length; i < len; i++) {
-        this.skyParts[i].mesh.translateZ(-0.3);
-        this.skyParts.filter(function (e) {
-            if (e.mesh.position.z <= -self.DISTANCE_TO_DELETE) {
-                self.scene.remove(e.mesh);
-                e.mesh.children.forEach(function (item) {
-                    self.scene.remove(item);
-                    item.material.dispose();
-                    item.geometry.dispose();
-                });
-                // console.break();
-                // if (e.geometry) e.geometry.dispose();
-                // if (e.material) e.material.dispose();
-                // if (e.texture) e.texture.dispose();
-                // if (e.mesh) e.mesh.dispose();
-                return false;
-            }
-            return true;
-        });
+    var isDeletion = this.skyParts[0].position.z <= this.DISTANCE_TO_DELETE;
+    var isAllocation = this.skyParts[this.skyParts.length-1].position.z <= this.DISTANCE_TO_ALLOCATE;
+    if (isDeletion) {
+        setTimeout(function () {
+            self.removeFirst();
+        }, 25);
     }
+    this.skyParts.forEach(function (item) {
+        item.translateZ(-0.1)
+    });
+    if (isAllocation) {
+        setTimeout(function () {
+            var frame = self.createCloudsFrame(self.skyParts.length);
+            self.skyParts.push(frame);
+        }, 25);
+    }
+};
+
+World.prototype.step = function () {
+    this.helicopter.rotateScrews();
+    this.moveClouds();
 };
