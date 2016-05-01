@@ -2,7 +2,7 @@
 //  * Created by emilsharifullin on 27/04/16.
 //  */
 //
-var DELTA = 1;
+var DELTA = 1.5;
 //
 var SOCKET;
 
@@ -32,17 +32,18 @@ function movement(event) {
     dx = ax - previous.x;
     dy = ay - previous.y;
     dz = az - previous.z;
+    // $(".accelerometer").html(" x:" + ax + ", y:" + ay + ", z:" + az);
+    previous.x = ax;
+    previous.y = ay;
+    previous.z = az;
     if(
         Math.abs(dx) > DELTA ||
         Math.abs(dy) > DELTA ||
         Math.abs(dz) > DELTA
     ) {
-        // $(".accelerometer").html(" x:" + ax + ", y:" + ay + ", z:" + az);
-        previous.x = ax;
-        previous.y = ay;
-        previous.z = az;
         SOCKET.emit('movement', {x: dx, y: dy, z: dz});
     }
+
 
     // rotation = event.rotationRate;
     // if (rotation != null) {
