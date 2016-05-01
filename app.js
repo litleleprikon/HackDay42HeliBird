@@ -25,7 +25,7 @@ dispatcher.setStaticDirname('.');
 
 function serveIndex(req, res) {
     var parsed = uaparse(req.headers['user-agent']);
-    if(parsed.os.name === 'iOS') {
+    if(parsed.os.name === 'iOS' || parsed.os.name === 'Android') {
         req.url = '/static/index_mobile.html';
         fs.readFile('static/index_mobile.html', function (err, data) {
             if (err) {
