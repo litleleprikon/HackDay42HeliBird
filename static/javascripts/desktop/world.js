@@ -5,6 +5,7 @@
 function World(scene) {
     this.scene = scene;
     this.helicopter = new Helicopter();
+    // this.helicopter.movementLoop();
     this.skyParts = [this.createCloudsFrame(0), this.createCloudsFrame(1), this.createCloudsFrame(2), this.createCloudsFrame(3)];
     this.helicopter.addToScene(scene);
     this.DISTANCE_TO_DELETE = -60;

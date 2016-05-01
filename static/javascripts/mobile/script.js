@@ -2,7 +2,7 @@
 //  * Created by emilsharifullin on 27/04/16.
 //  */
 //
-var DELTA = 2;
+var DELTA = 1;
 //
 var SOCKET;
 

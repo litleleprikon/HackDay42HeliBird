@@ -15,3 +15,10 @@ var COLORS = {
 function random(from, to) {
     return from + Math.random()*(to-from);
 }
+
+var MOVEMENT_WINDOW = {
+    LEFT: -20,
+    RIGHT: 20,
+    TOP: 20,
+    BOTTOM: -20
+};

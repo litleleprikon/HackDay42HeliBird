@@ -5372,7 +5372,7 @@ THREE.Matrix4.prototype = {
 
 	}(),
 
-	setPosition: function ( v ) {
+	setMovement: function (v ) {
 
 		var te = this.elements;
 
@@ -5578,7 +5578,7 @@ THREE.Matrix4.prototype = {
 
 		this.makeRotationFromQuaternion( quaternion );
 		this.scale( scale );
-		this.setPosition( position );
+		this.setMovement( position );
 
 		return this;
 
@@ -16771,7 +16771,7 @@ THREE.PositionalAudio.prototype.updateMatrixWorld = ( function () {
 
 		position.setFromMatrixPosition( this.matrixWorld );
 
-		this.panner.setPosition( position.x, position.y, position.z );
+		this.panner.setMovement( position.x, position.y, position.z );
 
 	};
 
@@ -16877,7 +16877,7 @@ THREE.AudioListener.prototype.updateMatrixWorld = ( function () {
 
 		orientation.set( 0, 0, - 1 ).applyQuaternion( quaternion );
 
-		listener.setPosition( position.x, position.y, position.z );
+		listener.setMovement( position.x, position.y, position.z );
 		listener.setOrientation( orientation.x, orientation.y, orientation.z, up.x, up.y, up.z );
 
 	};
@@ -27181,7 +27181,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 				// for point lights we set the shadow matrix to be a translation-only matrix
 				// equal to inverse of the light's position
 				_vector3.setFromMatrixPosition( light.matrixWorld ).negate();
-				_lights.pointShadowMatrix[ pointLength ].identity().setPosition( _vector3 );
+				_lights.pointShadowMatrix[ pointLength ].identity().setMovement( _vector3 );
 
 				_lights.point[ pointLength ++ ] = uniforms;
 
